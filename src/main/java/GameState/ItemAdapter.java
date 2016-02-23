@@ -1,4 +1,4 @@
-package madelinecameron.dreamlife.GameState;
+package madelinecameron.clickengine.GameState;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import madelinecameron.dreamlife.R;
+import madelinecameron.clickengine.R;
 
 public class ItemAdapter extends ArrayAdapter<Item> {
 

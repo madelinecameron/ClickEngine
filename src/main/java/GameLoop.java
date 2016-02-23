@@ -1,21 +1,11 @@
-package madelinecameron.dreamlife.Activities;
-
-import android.app.Activity;
-import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+package madelinecameron.clickengine.Activities;
 
 import java.util.HashMap;
 import java.util.Iterator;
 
-import madelinecameron.dreamlife.Character.GameCharacter;
-import madelinecameron.dreamlife.GameState.GameEvent;
-import madelinecameron.dreamlife.GameState.GameState;
-import madelinecameron.dreamlife.R;
+import madelinecameron.clickengine.Character.GameCharacter;
+import madelinecameron.clickengine.GameState.GameEvent;
+import madelinecameron.clickengine.GameState.GameState;
 
 /**
  * Created by madel on 9/23/2015.

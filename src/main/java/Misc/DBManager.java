@@ -1,4 +1,4 @@
-package madelinecameron.dreamlife.Misc;
+package madelinecameron.clickengine.Misc;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -19,10 +19,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.List;
 
+import madelinecameron.clickengine.config;
+
 public class DBManager extends SQLiteOpenHelper {
     private static Context context;
     public static final int DATABASE_VERSION = 1;
-    public static final String DATABASE_NAME = "DreamLife.db";
+    public static final String DATABASE_NAME = config.DB_NAME;
 
     public DBManager(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

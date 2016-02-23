@@ -1,4 +1,4 @@
-package madelinecameron.dreamlife.GameState;
+package madelinecameron.clickengine.GameState;
 
 /**
  * Created by madel on 9/16/2015.

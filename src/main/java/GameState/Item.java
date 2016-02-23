@@ -1,10 +1,11 @@
-package madelinecameron.dreamlife.GameState;
+package madelinecameron.clickengine.GameState;
 
 import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import madelinecameron.dreamlife.Character.GameCharacter;
+import madelinecameron.clickengine.Character.GameCharacter;
+import madelinecameron.clickengine.config;
 
 /**
  * Created by madel on 9/15/2015.
@@ -36,6 +37,6 @@ public class Item {
     }
 
     public Integer getSellCost() {
-        return Math.round(cost * 0.75f);
+        return Math.round(cost * config.SALE_PERCENT);
     }
 }

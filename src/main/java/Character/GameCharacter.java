@@ -1,4 +1,4 @@
-package madelinecameron.dreamlife.Character;
+package madelinecameron.clickengine.Character;
 
 import android.util.Log;
 
@@ -6,11 +6,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
-import madelinecameron.dreamlife.GameState.GameEvent;
-import madelinecameron.dreamlife.GameState.GameEventType;
-import madelinecameron.dreamlife.GameState.GameState;
-import madelinecameron.dreamlife.GameState.Item;
-import madelinecameron.dreamlife.Misc.Utilities;
+import madelinecameron.clickengine.GameState.GameEvent;
+import madelinecameron.clickengine.GameState.GameEventType;
+import madelinecameron.clickengine.GameState.GameState;
+import madelinecameron.clickengine.GameState.Item;
+import madelinecameron.clickengine.Misc.Utilities;
+import madelinecameron.clickengine.config;
 
 /**
  * Created by madel on 8/30/2015.
@@ -18,51 +19,60 @@ import madelinecameron.dreamlife.Misc.Utilities;
 public class GameCharacter {
     private HashMap<String, Object> attributes = new HashMap<>();
     private HashMap<String, Object> attributeLimits = new HashMap<>();
+    private HashMap<String, Number> heartbeatModify = new HashMap<>();
     private HashMap<Integer, Integer> ownedItems = new HashMap<>();
     private HashMap<String, Integer> skillMap = new HashMap<>();
     private HashMap<String, Float> progressMap = new HashMap<>();
 
     public GameCharacter() {
-        attributes.put("Energy", 100);
-        attributes.put("Food", 100);
-        attributes.put("Fun", 100);
-        attributeLimits.put("Energy", 100);
-        attributeLimits.put("Food", 100);
-        attributeLimits.put("Fun", 100);
+        attributes.put("Money", config.STARTING_MONEY);
+        attributes.put("PassiveIncome",
+          config.STARTING_PASSIVE_INCOME ? config.STARTING_PASSIVE_INCOME : 0);
 
-        attributes.put("Money", 300);
-        attributes.put("PassiveIncome", 0);
-        attributes.put("Karma", 0);
-        attributes.put("Age", 18);
-        attributes.put("HasJob", 0);
-        attributes.put("IsStudying", 0);
-        attributes.put("Education", Education.HIGH_SCHOOL);
-        attributes.put("Home", Home.HOMELESS);
-        attributes.put("Depression", 0);
-        attributes.put("Weight", 150);
-        attributes.put("Tired", 100);
+        loadAttributesFromConfig();
+    }
+
+    private void loadAttributesFromConfig() {
+        Iterator<JSONObject> attributeIterator = config.CHAR_ATTRIBUTES.iterator()
+        while(attributeIterator.hasNext()) {
+          JSONObject currentAttributeObj = attributeIterator.next()
+          attributes.put(currentAttributeObj.getString("name"), currentAttributeObj.getInt("startVal"));
+          if(currentAttributeObj.getInt("limit") != Null) {
+            attributeLimits.put(currentAttributeObj.getString("name"), currentAttributeObj.getInt("limit"))
+          }
+        }
+
+        Iterator<JSONObject> heartbeatModifyIterator = config.HEARTBEAT_MODIFY.iterator()
+        while(heartbeatModifyIterator.hasNext()) {
+          JSONObject currentHeartbeatModifyObj = heartbeatModifyIterator.next()
+          heartbeatModify.put(currentHeartbeatModifyObj.getString("name"), currentHeartbeatModifyObj.getInt("modifyVal"));
+        }
     }
 
     public HashMap<String, Object> heartbeat() {
         Integer money = (int)attributes.get("Money");
         attributes.put("Money", money + (int)attributes.get("PassiveIncome"));
 
+        Iterator heartbeatModifyIterator = heartbeatModify.entrySet().iterator()
+        while(heartbeatModifyIterator.hasNext()) {
+          Map.Entry modifyObj = (Map.Entry)heartbeatModifyIterator.next()
+          attributes.put(modifyObj.getKey(), attributes.get(modifyObj.getKey()) + modifyObj.getValue())
+        }
+
         return attributes;
     }
 
-    public String getEducation() { return attributes.get("Education").toString(); }
-    public String getHomeType() { return attributes.get("Home").toString(); }
-    public String getJob() {
+    public String getStatus() {
         Iterator<Integer> itemIterator = ownedItems.keySet().iterator();
-        String currentJobName = "Unemployed";
+        String currentStatusName = config.DEFAULT_STATUS;
         while(itemIterator.hasNext()) {
             Item currentItem = GameState.getItem(itemIterator.next());
-            if(currentItem.type == "Job") {
-                currentJobName = currentItem.name;
+            if(currentItem.type.toUpperCase() == "STATUS") {
+                currentStatusName = currentItem.name;
             }
         }
 
-        return currentJobName;
+        return currentStatusNameOIhISS;
     }
     public Set<Integer> getOwnedItems() { return ownedItems.keySet(); }
     public Set<String> getSkills() { return skillMap.keySet(); }
@@ -71,7 +81,7 @@ public class GameCharacter {
     public Boolean ownsItem(Integer itemID) { return ownedItems.containsKey(itemID); }
     public Integer getOwnedItemQty(Integer itemID) { return ownedItems.get(itemID); }
     public Integer getSkillLevel(String skillName) { return skillMap.get(skillName); }
-    public Object getAttrLevel(String attrName) { return attributes.get(attrName); }
+    public Object getAttr(String attrName) { return attributes.get(attrName); }
     public Object getAttrLimit(String attrName) { return attributeLimits.get(attrName); }
     public Float getProgression(String name) { return progressMap.get(name); }
 
@@ -98,6 +108,7 @@ public class GameCharacter {
         }
     }
     public void addSkill(String skillName) { skillMap.put(skillName, 0); }
+    public void addSkill(String skillName, Integer defaultValue) { skillMap.put(skillName, defaultValue); }
     public void addItem(Integer itemID) {
         Log.d("DreamLife", "Adding item...");
         if(ownsItem(itemID)) {
@@ -155,8 +166,9 @@ public class GameCharacter {
         GameState.addGameEvent(new GameEvent(String.format("%s% progress in %s", progression.toString(), name), GameEventType.PROGRESS));
     }
 
-    public boolean buyItem(Item item) {
+    public boolean buyItem(Integer itemId) {
         try {
+            Item item = GameState.getItem(itemId);
             Utilities.causeEffects(item.results, this);
             modifyAttrOrSkill("Money", (int)getAttrLevel("Money") - item.cost);
 
@@ -178,8 +190,9 @@ public class GameCharacter {
         }
     }
 
-    public boolean sellItem(Item item) {
+    public boolean sellItem(Integer itemId) {
         try {
+            Item item = GameState.getItem(itemId);
             Utilities.removeEffects(item.results, this);
             modifyAttrOrSkill("Money", (int)getAttrLevel("Money") + item.getSellCost());
 

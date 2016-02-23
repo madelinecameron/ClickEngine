@@ -1,4 +1,4 @@
-package madelinecameron.dreamlife.GameState;
+package madelinecameron.clickengine.GameState;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -16,10 +16,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import madelinecameron.dreamlife.Activities.PageType;
-import madelinecameron.dreamlife.Character.GameCharacter;
-import madelinecameron.dreamlife.Misc.DBManager;
-import madelinecameron.dreamlife.Misc.Utilities;
+import madelinecameron.clickengine.Activities.PageType;
+import madelinecameron.clickengine.Character.GameCharacter;
+import madelinecameron.clickengine.Misc.DBManager;
+import madelinecameron.clickengine.Misc.Utilities;
 
 /**
  * Created by madel on 9/12/2015.
@@ -33,23 +33,11 @@ public class GameState {
     private static Queue<GameEvent> eventQueue = new LinkedList<>();
     private static HashMap<String, Object> worldAttributes = new HashMap<>();
 
-    public GameState(Context context) {
+    public GameState(Context context, HashMap<String, Object> worldAttributes) {
         this.db = new DBManager(context);
         this.gameCharacter = new GameCharacter();
         this.context = context;
-
-        try {
-            String dt = "2015-01-01";  // Start date
-            SimpleDateFormat dateForm = new SimpleDateFormat("yyyy-MM-dd");
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(dateForm.parse(dt));
-
-            worldAttributes.put("CurrentDate", calendar);
-            worldAttributes.put("Day", 0);
-        }
-        catch(Exception e) {
-            Log.d("DreamLife", e.toString());
-        }
+        this.worldAttributes = worldAttributes
     }
 
     public static HashMap<String, Object> worldHeartbeat() {
@@ -96,18 +84,18 @@ public class GameState {
                     Integer id = selectCursor.getInt(selectCursor.getColumnIndex("_id"));
                     String name = selectCursor.getString(selectCursor.getColumnIndex("Name"));
                     String descrip = selectCursor.getString(selectCursor.getColumnIndex("Description"));
-                    PageType pageType = PageType.valueOf(selectCursor.getString(selectCursor.getColumnIndex("Page")).toUpperCase());
+                    PageType type = PageType.valueOf(selectCursor.getString(selectCursor.getColumnIndex("Page")).toUpperCase());
                     JSONObject needed = new JSONObject(selectCursor.getString(selectCursor.getColumnIndex("Needed")));
                     JSONObject results = new JSONObject(selectCursor.getString(selectCursor.getColumnIndex("Result")));
 
                     allActions.put(name, new Action(id, name, descrip, pageType, needed, results));
                 } catch (Exception e) {
-                    Log.e("DreamLife", e.toString());
+                    Log.e("ClickEngine", e.toString());
                 }
             }
         }
         catch(Exception e) {
-            Log.e("DreamLife", e.toString());
+            Log.e("ClickEngine", e.toString());
         }
 
     }
@@ -259,4 +247,3 @@ public class GameState {
         eventQueue.add(e);
     }
 }
-

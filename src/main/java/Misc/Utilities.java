@@ -1,4 +1,4 @@
-package madelinecameron.dreamlife.Misc;
+package madelinecameron.clickengine.Misc;
 
 import android.util.Log;
 
@@ -13,9 +13,10 @@ import java.util.LinkedHashSet;
 import java.util.Random;
 import java.util.Set;
 
-import madelinecameron.dreamlife.Character.GameCharacter;
-import madelinecameron.dreamlife.GameState.GameState;
-import madelinecameron.dreamlife.GameState.Item;
+import madelinecameron.clickengine.Character.GameCharacter;
+import madelinecameron.clickengine.GameState.GameState;
+import madelinecameron.clickengine.GameState.Item;
+import madelinecameron.clickengine.config;
 
 /**
  * Created by madel on 9/15/2015.
@@ -23,7 +24,7 @@ import madelinecameron.dreamlife.GameState.Item;
 
 public class Utilities {
 
-    public static final double MODIFIER_BOOST_PER_TEN_PTS = 0.01;
+    public static final double MODIFIER_BOOST_PER_TEN_PTS = config.MOD_BOOST_PER_TEN_PTS;
 
     private static double parseModifier(JSONArray modifierArray, double basePercent) {
         GameCharacter currentChar = GameState.getGameCharacter();

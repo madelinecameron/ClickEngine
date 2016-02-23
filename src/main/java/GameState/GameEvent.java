@@ -1,4 +1,4 @@
-package madelinecameron.dreamlife.GameState;
+package madelinecameron.clickengine.GameState;
 
 import android.content.Context;
 import android.util.Log;

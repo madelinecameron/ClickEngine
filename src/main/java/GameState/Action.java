@@ -1,4 +1,4 @@
-package madelinecameron.dreamlife.GameState;
+package madelinecameron.clickengine.GameState;
 
 import android.util.Log;
 
@@ -7,9 +7,9 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import madelinecameron.dreamlife.Activities.PageType;
-import madelinecameron.dreamlife.Character.GameCharacter;
-import madelinecameron.dreamlife.Misc.Utilities;
+import madelinecameron.clickengine.Activities.PageType;
+import madelinecameron.clickengine.Character.GameCharacter;
+import madelinecameron.clickengine.Misc.Utilities;
 
 /**
  * Created by madel on 9/15/2015.
